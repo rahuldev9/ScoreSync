@@ -103,7 +103,7 @@ const ActivePlayers = ({ matchCode }) => {
     const fetchMatch = async () => {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_BASE/verify-match`,
+          `${process.env.REACT_APP_API_BASE}/verify-match`,
           { matchCode }
         );
         if (response.data.success) {
