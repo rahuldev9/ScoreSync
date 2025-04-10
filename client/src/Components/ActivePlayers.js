@@ -339,7 +339,7 @@ const ActivePlayers = ({ matchCode }) => {
       });
       setTimeout(async () => {
         const response = await axios.get(
-          `http://localhost:5000/active-players/${matchCode}`
+          `${process.env.REACT_APP_API_BASE}/active-players/${matchCode}`
         );
         setPlayers(response.data);
       }, 300);
