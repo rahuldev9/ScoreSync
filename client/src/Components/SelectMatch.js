@@ -211,7 +211,7 @@ const SelectMatch = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/currentmatch",
+        `${process.env.REACT_APP_API_BASE}/currentmatch`,
         formattedData
       );
       localStorage.setItem("host", true);
