@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 
 const SignUp = () => {
@@ -7,6 +8,7 @@ const SignUp = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -68,14 +70,22 @@ const SignUp = () => {
             value={form.email}
             onChange={handleChange}
           />
-          <input
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Password"
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-          />
+<div className="relative w-full">
+      <input
+        className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Password"
+        type={showPassword ? "text" : "password"}
+        name="password"
+        value={form.password}
+        onChange={handleChange}
+      />
+      <span
+        onClick={() => setShowPassword((prev) => !prev)}
+        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+      >
+        {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+      </span>
+    </div>
          <button
   type="submit"
   disabled={loading}
