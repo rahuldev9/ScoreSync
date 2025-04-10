@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [form, setForm] = useState({ identifier: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [Message, setMessage] = useState("")
-
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,14 +68,22 @@ const Login = () => {
             onChange={handleChange}
           />
 
-          <input
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Password"
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-          />
+<div className="relative w-full">
+      <input
+        className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Password"
+        type={showPassword ? "text" : "password"}
+        name="password"
+        value={form.password}
+        onChange={handleChange}
+      />
+      <span
+        onClick={() => setShowPassword((prev) => !prev)}
+        className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+      >
+        {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+      </span>
+    </div>
           <div className="text-right">
             <Link
               to="/forgot-password"
