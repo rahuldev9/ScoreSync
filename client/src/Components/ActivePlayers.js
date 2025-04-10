@@ -233,7 +233,7 @@ const ActivePlayers = ({ matchCode }) => {
       const [playersRes, matchRes, RunsRequire] = await Promise.all([
         axios.get(`${process.env.REACT_APP_API_BASE}/active-players/${matchCode}`),
         axios.post(`${process.env.REACT_APP_API_BASE}/verify-match`, { matchCode }),
-        axios.get(`${process.env.REACT_APP_API_BASE}/${matchCode}`),
+        axios.get(`${process.env.REACT_APP_API_BASE}/require-runs/${matchCode}`),
       ]);
 
       setPlayers(playersRes.data);
