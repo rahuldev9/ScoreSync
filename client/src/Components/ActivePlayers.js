@@ -72,7 +72,7 @@ const ActivePlayers = ({ matchCode }) => {
   const StartNewInning = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/toggle-innings/${matchCode}`
+        `${process.env.REACT_APP_API_BASE}/toggle-innings/${matchCode}`
       );
       setInning(false);
       localStorage.removeItem("state");
@@ -86,7 +86,7 @@ const ActivePlayers = ({ matchCode }) => {
     const fetchActivePlayers = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/active-players/${matchCode}`
+          `${process.env.REACT_APP_API_BASE}/active-players/${matchCode}`
         );
         setPlayers(response.data);
         const BatTeamLogo = response?.data?.BattingLogo;
@@ -120,7 +120,7 @@ const ActivePlayers = ({ matchCode }) => {
     const Runs = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/require-runs/${matchCode}`
+          `${process.env.REACT_APP_API_BASE}/require-runs/${matchCode}`
         );
         if (response.data) {
           setNeedRuns(response.data.match);
@@ -231,9 +231,9 @@ const ActivePlayers = ({ matchCode }) => {
       Commentary(type, runValue);
 
       const [playersRes, matchRes, RunsRequire] = await Promise.all([
-        axios.get(`http://localhost:5000/active-players/${matchCode}`),
-        axios.post("http://localhost:5000/verify-match", { matchCode }),
-        axios.get(`http://localhost:5000/require-runs/${matchCode}`),
+        axios.get(`https://scoresync-qynq.onrender.com/active-players/${matchCode}`),
+        axios.post("https://scoresync-qynq.onrender.com/verify-match", { matchCode }),
+        axios.get(`https://scoresync-qynq.onrender.com/${matchCode}`),
       ]);
 
       setPlayers(playersRes.data);
@@ -271,7 +271,7 @@ const ActivePlayers = ({ matchCode }) => {
     }
 
     try {
-      await axios.post(`http://localhost:5000/wicket-event`, {
+      await axios.post(`${process.env.REACT_APP_API_BASE}/wicket-event`, {
         matchCode,
         dismissedBatter,
         dismissalType,
@@ -280,7 +280,7 @@ const ActivePlayers = ({ matchCode }) => {
       // Refresh Player List
       Commentary(dismissalType, 0);
       const response = await axios.get(
-        `http://localhost:5000/active-players/${matchCode}`
+        `${process.env.REACT_APP_API_BASE}/active-players/${matchCode}`
       );
       setPlayers(response.data);
       setIsBatterChangeOpen(true);
@@ -302,7 +302,7 @@ const ActivePlayers = ({ matchCode }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/select-bowlerChange",
+        `${process.env.REACT_APP_API_BASE}/select-bowlerChange`,
         {
           matchCode,
           bowlerName: selectedBowler, // Send Player ID
@@ -310,7 +310,7 @@ const ActivePlayers = ({ matchCode }) => {
       );
       setTimeout(async () => {
         const response = await axios.get(
-          `http://localhost:5000/active-players/${matchCode}`
+          `${process.env.REACT_APP_API_BASE}/active-players/${matchCode}`
         );
         setPlayers(response.data);
       }, 300);
@@ -334,7 +334,7 @@ const ActivePlayers = ({ matchCode }) => {
     }
     localStorage.setItem("state", true);
     try {
-      const response = await axios.post("http://localhost:5000/select-batter", {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE}/select-batter`, {
         matchCode,
         batterName: selectedBatter, // Send Player ID
       });
