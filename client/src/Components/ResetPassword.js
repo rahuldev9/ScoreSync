@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa"
 
 const ResetPassword = () => {
   const { token } = useParams(); 
@@ -9,6 +10,8 @@ const ResetPassword = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showEnteredPassword, setShowEnteredPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate()
   const handleReset = async (e) => {
     e.preventDefault();
@@ -41,22 +44,39 @@ const ResetPassword = () => {
     <div className="max-w-md mx-auto p-6 mt-10 bg-white rounded-xl shadow-md">
       <h2 className="text-2xl font-bold mb-4 text-center">Reset Password</h2>
       <form onSubmit={handleReset} className="space-y-4">
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="New password"
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          required
-        />
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          placeholder="Confirm password"
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          required
-        />
+
+        <div className="relative w-full">
+      <input
+        type={showEnteredPassword ? "text" : "password"}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="New password"
+        className="w-full px-4 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        required
+      />
+      <span
+        onClick={() => setShowEnteredPassword((prev) => !prev)}
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+      >
+        {showEnteredPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+      </span>
+    </div>
+        <div className="relative w-full">
+      <input
+        type={showConfirmPassword ? "text" : "password"}
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        placeholder="Confirm password"
+        className="w-full px-4 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        required
+      />
+      <span
+        onClick={() => setShowConfirmPassword((prev) => !prev)}
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer"
+      >
+        {showConfirmPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+      </span>
+    </div>
         <button
             type="submit"
             disabled={loading}
