@@ -72,7 +72,7 @@ const ActivePlayers = ({ matchCode }) => {
   const StartNewInning = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/toggle-innings/${matchCode}`
+        `${process.env.REACT_APP_API_BASE}/toggle-innings/${matchCode}`
       );
       setInning(false);
       localStorage.removeItem("state");
@@ -86,7 +86,7 @@ const ActivePlayers = ({ matchCode }) => {
     const fetchActivePlayers = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/active-players/${matchCode}`
+          `${process.env.REACT_APP_API_BASE}/active-players/${matchCode}`
         );
         setPlayers(response.data);
         const BatTeamLogo = response?.data?.BattingLogo;
