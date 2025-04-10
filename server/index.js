@@ -24,7 +24,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-app.use(cors());
+app.use(cors({
+  origin: `${process.env.FRONTEND_URL}`, 
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], 
+}));
 app.use(express.json({ limit: "10mb" }));
 
 connectDB();
