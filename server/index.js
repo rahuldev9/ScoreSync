@@ -498,12 +498,12 @@ app.get("/active-players/:matchCode", async (req, res) => {
 
     const match = await CurrentMatch.findOne({ matchCode });
 
-    let battingTeam = match.teamA.batting ? match.teamA : match.teamB;
-    let bowlingTeam = match.teamA.batting ? match.teamB : match.teamA;
-    let battingTeamName = battingTeam.name;
-    let bowlingTeamName = bowlingTeam.name;
-    const BatTeamLogo = await Team.findOne({ name: battingTeamName });
-    const BowlTeamLogo = await Team.findOne({ name: bowlingTeamName });
+    // let battingTeam = match.teamA.batting ? match.teamA : match.teamB;
+    // let bowlingTeam = match.teamA.batting ? match.teamB : match.teamA;
+    // let battingTeamName = battingTeam.name;
+    // let bowlingTeamName = bowlingTeam.name;
+    // const BatTeamLogo = await Team.findOne({ name: battingTeamName });
+    // const BowlTeamLogo = await Team.findOne({ name: bowlingTeamName });
     if (!match) {
       return res.status(404).json({ message: "Match not found" });
     }
@@ -545,8 +545,8 @@ app.get("/active-players/:matchCode", async (req, res) => {
           }
         : null,
       activeBowler,
-      BattingLogo: BatTeamLogo,
-      BowlingLogo: BowlTeamLogo,
+      // BattingLogo: BatTeamLogo,
+      // BowlingLogo: BowlTeamLogo,
     });
   } catch (error) {
     console.error(error);
