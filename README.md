@@ -53,6 +53,7 @@
    ```bash
    cd server
    nodemon
+   
 3. **Setup the Frontend**
   ```bash
   cd client
