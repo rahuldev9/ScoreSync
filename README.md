@@ -36,8 +36,6 @@
 
 ---
 
----
-
 ## 🧑‍💻 Getting Started
 
 ### Prerequisites
@@ -51,14 +49,9 @@
 1. **Clone the repository**
    ```bash
    git clone https://github.com/your-username/scoresync.git
-2. **Run the Frontend**
-  ```bash
+2. **Setup the Backend**
+   cd server
+   nodemon
+3. **Setup the Frontend**
   cd client
-  nmp run start
-3. **Start the Server**
-  ```bash
-  cd server
-  nodemon
-
-
-   
+  npm start
