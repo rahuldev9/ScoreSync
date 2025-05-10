@@ -54,6 +54,6 @@
    cd server
    nodemon
 3. **Setup the Frontend**
-   ```bash
+  ```bash
   cd client
   npm start
