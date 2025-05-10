@@ -50,8 +50,10 @@
    ```bash
    git clone https://github.com/your-username/scoresync.git
 2. **Setup the Backend**
+   ```bash
    cd server
    nodemon
 3. **Setup the Frontend**
+   ```bash
   cd client
   npm start
