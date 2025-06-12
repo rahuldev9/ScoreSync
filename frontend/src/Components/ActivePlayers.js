@@ -33,6 +33,7 @@ const ActivePlayers = ({ matchCode }) => {
   const [BatTeamLogo, setBatTeamLogo] = useState(null);
   const [BowlTeamLogo, setBowlTeamLogo] = useState(null);
   const [showPopup, setshowPopup] = useState(false);
+  const [Undo, setUndo] = useState(false)
 
   const currentBattingPlayers = match?.teamA?.batting
     ? match?.playersA
@@ -75,8 +76,10 @@ const ActivePlayers = ({ matchCode }) => {
         `${process.env.REACT_APP_API_BASE}/toggle-innings/${matchCode}`
       );
       setInning(false);
-      localStorage.removeItem("state");
-      window.location.reload();
+      if(response){
+        localStorage.removeItem("state");
+        window.location.reload();
+      }
     } catch (error) {
       console.error("Failed to toggle innings:", error);
     }
@@ -214,6 +217,7 @@ const ActivePlayers = ({ matchCode }) => {
     type = "normal",
     wicket = false
   ) => {
+    
     try {
       const isLegalDelivery = !["wide", "no-ball"].includes(type);
 
@@ -227,9 +231,10 @@ const ActivePlayers = ({ matchCode }) => {
           countBall: isLegalDelivery,
         }
       );
-
-      Commentary(type, runValue);
-
+      setUndo(true)
+      if(response){
+        Commentary(type, runValue);
+      }
       const [playersRes, matchRes, RunsRequire] = await Promise.all([
         axios.get(`${process.env.REACT_APP_API_BASE}/active-players/${matchCode}`),
         axios.post(`${process.env.REACT_APP_API_BASE}/verify-match`, { matchCode }),
@@ -243,6 +248,7 @@ const ActivePlayers = ({ matchCode }) => {
       const balls =
         playersRes.data?.activeBowler?.stats?.bowling?.ballsInCurrentOver;
       if (balls === 0) setIsBowlerChangeOpen(true);
+      
     } catch (err) {
       console.error("Failed to update run in database", err);
     }
@@ -253,6 +259,7 @@ const ActivePlayers = ({ matchCode }) => {
   };
 
   const submitExtraRun = (runValue) => {
+    setUndo(true)
     const runs = parseInt(runValue);
     if (!isNaN(runs) && extraRunInput.key && extraRunInput.type) {
       const baseType = extraRunInput.type.split("+")[0];
@@ -269,7 +276,7 @@ const ActivePlayers = ({ matchCode }) => {
       alert("Please select the dismissal type.");
       return;
     }
-
+    setUndo(true)
     try {
       await axios.post(`${process.env.REACT_APP_API_BASE}/wicket-event`, {
         matchCode,
@@ -355,10 +362,10 @@ const ActivePlayers = ({ matchCode }) => {
       alert("Server error. Please try again.");
     }
   };
-  const ChangeBatterBowlers = () => {
-    localStorage.removeItem("state");
-    window.location.reload();
-  };
+  // const ChangeBatterBowlers = () => {
+  //   localStorage.removeItem("state");
+  //   window.location.reload();
+  // };
 
   const ToggleStrike = async () => {
     try {
@@ -381,6 +388,32 @@ const ActivePlayers = ({ matchCode }) => {
     5: "normal",
     6: "six",
   };
+
+  const handleUndo = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE}/undo-last-action`,
+        { matchCode }
+      );
+  
+      if (response.data.success) {
+        const [playersRes, matchRes, runsRes] = await Promise.all([
+          axios.get(`${process.env.REACT_APP_API_BASE}/active-players/${matchCode}`),
+          axios.post(`${process.env.REACT_APP_API_BASE}/verify-match`, { matchCode }),
+          axios.get(`${process.env.REACT_APP_API_BASE}/require-runs/${matchCode}`)
+        ]);
+        setPlayers(playersRes.data);
+        if (matchRes.data.success) setMatch(matchRes.data.match);
+        if (runsRes.data) setNeedRuns(runsRes.data.match);
+      } else {
+        alert("Undo failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Undo error:", error);
+      alert("Server error during undo.");
+    }
+  };
+  
 
   return (
     <div className="w-full">
@@ -414,6 +447,14 @@ const ActivePlayers = ({ matchCode }) => {
 
         <p className="text-sm text-gray-500">
           Overs:{" "}
+          <span className="font-medium text-gray-700">
+            {bowlingTeam.overs}.{bowlingTeam.ballsInCurrentOver}
+          </span>{" "}
+          / {match.overs}
+        </p>
+
+        <p className="text-sm text-gray-500">
+          Pattership{" "}
           <span className="font-medium text-gray-700">
             {bowlingTeam.overs}.{bowlingTeam.ballsInCurrentOver}
           </span>{" "}
@@ -621,6 +662,10 @@ const ActivePlayers = ({ matchCode }) => {
                 >
                   Toggle Strike
                 </button>
+                <button onClick={handleUndo} disabled={!Undo} style={{ margin: "10px", padding: "6px 12px", background: "#f44336", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}>
+                  Undo
+</button>
+
               </div>
             </div>
           );
